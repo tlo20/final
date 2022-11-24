@@ -1,76 +1,75 @@
-const fs = require("fs")
+//const fs = require("fs")
+//let students = []
 
-let students = []
+const Sequelize = require('sequelize');
+
+
+var sequelize = new Sequelize('sloycxak', 'sloycxak', 'O96emZ3ij490axdp6dNrQv_wpqyuWTSE', {
+    host: 'peanut.db.elephantsql.com',
+    dialect: 'postgres',
+    port: 5432,
+    dialectOptions: {
+        ssl: { rejectUnauthorized: false }
+    },
+    query: { raw: true }
+});
+
+
+sequelize
+    .authenticate()
+    .then(function() {
+        console.log('Connection established');
+    })
+    .catch(function(err) {
+        console.log('Unable to connect to the database:', err);
+    });
+
+let Student = sequelize.define('Student',{
+    StudId: {type:Sequelize.INTEGER,primaryKey:true,autoIncrement:true},
+    name:Sequelize.STRING,
+    program: Sequelize.STRING,
+    gpa: Sequelize.FLOAT
+});
 
 function prep(){
-    return new Promise( 
-        (resolve,reject)=>{
+    return new Promise((resolve,reject)=>{
+        sequelize.sync().then(resolve(),reject("Unable to connect to database"))
+    })
     
-        fs.readFile('./students.json',(err,data)=>{
-            if (err)reject("Unable to read file")
-            students = JSON.parse(data);
-            resolve()
-        })
+}
+
+function addStudent(student){
+    return new Promise( (resolve,reject)=>{
+        Student.create(student).then(resolve(),reject("Unable to add student"))
+    } )
+}
+
+function cpa(){
+    return new Promise( (resolve,reject)=>{
+        Student.findAll({where:{program:"CPA"}})
+        .then(result=>resolve(result),err=>reject("Unable to retrive data"))
+    } )
+}
+
+function highGPA(){
+    return new Promise( (resolve,reject)=>{
+        Student.findOne({order:[["gpa","DESC"]]})
+        .then(result=>resolve(result),err=>reject("Unable to retrive data"))
     })
 }
 
 function allStudents(){
     return new Promise( (resolve,reject)=>{
-        if (students.length==0){reject("No students found!");} 
-        else{resolve(students);}
-    });
-}
-
-function cpa(){
-    return  new Promise( (resolve,reject)=> {
-        let results = [];
-        if (students.length==0){reject("no results returned")}
-        else{
-            for (let s of students){
-                if (s.program=="CPA"){results.push(s);}
-            }
-            resolve(results)
-        }
-    }) 
-}
-
-function highGPA(){
-    return  new Promise( (resolve,reject)=> {
-        if (students.length==0){reject("No Data Found!")}
-       let highestGPA = 0
-       let highestStudentIndex
-       for (let i=0;i<students.length;i++){
-        if (students[i].gpa > highestGPA){
-            highestGPA = students[i].gpa
-            highestStudentIndex = i
-        }
-       }
-       resolve(students[highestStudentIndex])
-    }) 
+        Student.findAll()
+        .then(result=>resolve(result),err=>reject("Unable to retrive data"))
+    } )
 }
 
 function getStudent(studentId){
     return new Promise( (resolve,reject)=>{
-        for (let s of students){
-            if (s.studId==studentId){resolve(s);}
-        }
-        reject("No record found");
-    } )
-}
-
-
-function addStudent(student){
-    return new Promise( (resolve,reject)=>{
-        if (student!=undefined){
-            student.studId=students.length+1;
-            students.push(student);
-            resolve(student);            
-        }else{
-            reject("Unable to add student!")
-        }
-
-
-    } )
+        Student.findOne({where:{StudId:studentId}})
+        .then(result=>resolve(result),err=>reject("Unable to retrive data"))
+    })
 }
 
 
