@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            form{width: 50%;margin: auto;}
+            input,select {margin-bottom: 10pt;}
+        </style>
+    </head>
+    <body>
+        <form action="./addStudent" method="POST" >
+            <h1>Add student</h1>
+          
+            <fieldset>
+                <legend>Student Information</legend>
+            <label for="studId">Student Id:</label> <input required type="text" id="studId" name="studId"><br/>
+            <label for="name">Student Name:</label> <input required type="text" id="name" name="name"><br/>
+            <label for="program">Program: </label>
+            <select name="program" id="program" required>
+                <option selected value="BSD">BSD</option>
+                <option value="CPA">CPA</option>
+                <option value="DSA">DSA</option>
+            </select><br/>
+            <label for="gpa" >GPA:</label> <input required type="number" name="gpa" id="gpa"><br/>
+            <input  type="submit" value="Add Student"><input type="reset" value="Reset"/>    
+        </fieldset>
+            
+        </form>
+            
+            
+        
+        
+    </body>
+</html>

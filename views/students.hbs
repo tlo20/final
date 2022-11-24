@@ -1,0 +1,22 @@
+{{#if students}}
+<style>
+    table, th, td{border: 1px solid;}
+</style>
+<h1>Student List</h1>
+<table>
+    <tr>
+        <th>Student Id</th>
+        <th>Name</th>
+        <th>Program</th>
+        <th>GPA</th>
+    </tr>
+    {{#each students}}
+        <tr>
+        <td>{{this.studId}}</td>
+        <td>{{this.name}}</td>
+        <td>{{this.program}}</td>
+        <td>{{this.gpa}}</td>
+    </tr>
+    {{/each}}
+</table>
+{{/if}}
