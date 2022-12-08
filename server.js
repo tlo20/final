@@ -1,4 +1,4 @@
-// Cyclic app link: https://clever-ruby-dress.cyclic.app/
+// Cyclic app link: https://plum-tired-duckling.cyclic.app/
 
 const express = require("express")
 const { readSync } = require("fs")
